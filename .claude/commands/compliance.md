@@ -1,11 +1,11 @@
 ---
-description: Check the records against the rules this industry lives under (the ones listed in docs/compliance.md) and report what is missing, late, or about to breach, with the rule cited.
+description: Check the registers against the NZ and Australian rules in docs/compliance.md (share issue notices, ASIC Form 484, ESS reporting, the 50 non-employee shareholder limit, register details) and the operator's policies, and report what is late, due or missing with the rule cited.
 ---
 
-1. Read `docs/compliance.md`. Each rule has a name, the source it comes from, what a breach looks like in the data, and the SQL or command that finds it.
-2. Run each check. Use the CLI's `--json` output or a direct query through `scripts/lib/db.mjs`.
-3. Report as a table: rule, count, the worst example (name and days), the source. Order by severity: breached first, then due within 7 days, then clean.
-4. For anything breached, draft the fix the operator can approve: the record to update, the notice to send (draft to `drafts/`, never send), or the task to add.
-5. If a rule in `docs/compliance.md` is out of date, say so and stop. Do not guess at law. The operator confirms the rule, then you update the doc and the check together.
+1. Run `npm run cap -- compliance` (or `--company=<code>`). Each row has a severity: breached, due soon, near limit, or policy.
+2. Read `docs/compliance.md` for the source of each rule and what the check does not cover.
+3. Report as a table: rule, company, subject, what is wrong, the source. Breached first, then due soon, near limit, then policy.
+4. For each, name the fix: lodge and /record-filing, add an address with /add or `import stakeholders`, record a board approval with /approve, or raise it with the board.
+5. If a rule in `docs/compliance.md` looks out of date, say so and stop. Do not guess at law. The operator confirms the rule, then you update the doc and the check together in a migration.
 
-Nothing here is legal advice. The doc records the rules the operator has told the system to enforce, with sources, and this command checks the data against them.
+Nothing here is legal or tax advice. The doc records the rules the operator has told the system to enforce, with sources, and this command checks the records against them.

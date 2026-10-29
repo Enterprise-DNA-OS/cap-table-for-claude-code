@@ -1,0 +1,4 @@
+Stakeholder Name,Stakeholder Email,Relationship,Security ID,Security Type,Share Class,Equity Plan,Quantity,Price Per Share,Issue Date,Vesting Start Date,Vesting Period (Months),Cliff (Months),Expiration Date,Exercised,Cancelled
+Nadia Petrov,nadia@petrov.example,Investor,CS-101,Common Stock,Ordinary shares,,150000,0.95,03/14/2026,,,,,,
+Tasman Ventures Fund II LP,ops@tasmanvc.example,Investor,PS-201,Preferred Stock,Series A preference shares,,50000,1.20,05/02/2026,,,,,,
+Owen Hughes,owen@kowhai.example,Employee,ES-301,Option,,Kowhai Robotics Share Option Plan,30000,0.95,04/01/2026,04/01/2026,48,12,04/01/2036,0,0

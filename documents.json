@@ -1,11 +1,45 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "share-register",
+    "title": "Share register",
+    "for_each": "select id, name from cap.companies order by code",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      { "title": "Company", "layout": "record", "sql": "select name, company_number, jurisdiction, company_type, registered_office, current_date as register_as_at from cap.companies where id = $1" },
+      { "title": "Shareholders", "note": "Companies Act 1993 (NZ) s87; Corporations Act 2001 (Cth) s169. Joint holders are listed as one entry.",
+        "sql": "select s.name, coalesce(s.address, 'NO ADDRESS ON FILE') address, k.name class, h.shares, (select min(e.on_date) from cap.share_events e where e.stakeholder_id = s.id and e.class_id = k.id and e.shares > 0) registered_on from cap.holdings h join cap.stakeholders s on s.id = h.stakeholder_id join cap.share_classes k on k.id = h.class_id where h.company_id = $1 and h.shares > 0 order by k.seniority desc, h.shares desc" },
+      { "title": "Issues, transfers and cancellations", "sql": "select e.on_date, e.code, replace(e.kind, '_', ' ') kind, s.name holder, k.code class, e.shares, trim_scale(e.price) price, coalesce(e.certificate_no, '') certificate from cap.share_events e join cap.stakeholders s on s.id = e.stakeholder_id join cap.share_classes k on k.id = e.class_id where e.company_id = $1 order by e.on_date, e.code" }
+    ]
+  },
+  {
+    "name": "option-register",
+    "title": "Register of option holders",
+    "for_each": "select id, name from cap.companies order by code",
+    "file": "name",
+    "sections": [
+      { "title": "Options outstanding", "note": "Corporations Act 2001 (Cth) s170 for Australian companies. New Zealand companies keep it as good practice.",
+        "sql": "select g.holder, coalesce(s.address, 'NO ADDRESS ON FILE') address, g.code grant_id, g.granted_on, g.outstanding options, k.name over_shares, trim_scale(g.exercise_price) exercise_price, g.vesting_start exercisable_from, coalesce(g.expires_on::text, 'NOT RECORDED') exercisable_until, 'Nil' paid_for_grant from cap.grant_status g join cap.stakeholders s on s.id = g.stakeholder_id join cap.share_classes k on k.id = g.class_id where g.company_id = $1 and g.outstanding > 0 order by g.granted_on" }
+    ]
+  },
+  {
+    "name": "share-certificate",
+    "title": "Share certificate",
+    "for_each": "select e.id, c.code || '-' || coalesce(e.certificate_no, e.code) as name from cap.share_events e join cap.companies c on c.id = e.company_id where e.kind in ('issue','exercise','conversion','transfer_in') order by c.code, e.on_date",
+    "file": "name",
+    "sections": [
+      { "title": "Certificate", "layout": "record", "sql": "select coalesce(e.certificate_no, e.code) certificate_no, c.name company, c.company_number, s.name registered_holder, s.address, e.shares number_of_shares, k.name class, case when e.kind = 'transfer_in' then 'transfer' else 'issue' end acquired_by, e.on_date date_entered_in_register from cap.share_events e join cap.companies c on c.id = e.company_id join cap.stakeholders s on s.id = e.stakeholder_id join cap.share_classes k on k.id = e.class_id where e.id = $1" },
+      { "title": "Rights of the class", "layout": "record", "sql": "select k.name class, trim_scale(k.votes_per_share) votes_per_share, case when k.kind = 'preference' then trim_scale(k.pref_multiple) || 'x preference on ' || trim_scale(k.original_price) || ' a share' || case when k.participating then ', participating' else ', non-participating' end else 'none' end liquidation_preference from cap.share_events e join cap.share_classes k on k.id = e.class_id where e.id = $1" }
+    ]
+  },
+  {
+    "name": "option-statement",
+    "title": "Share option statement",
+    "for_each": "select g.id, g.company || '-' || g.code || '-' || g.holder as name from cap.grant_status g where g.status = 'active' and not g.expired order by g.company, g.code",
+    "file": "name",
+    "sections": [
+      { "title": "Your grant", "layout": "record", "sql": "select g.holder, c.name company, g.plan, g.code grant_id, g.granted_on, g.quantity options_granted, trim_scale(g.exercise_price) exercise_price, c.currency, g.vesting_start, g.vest_months || ' months, ' || g.cliff_months || ' month cliff, then every ' || g.vest_every_months || ' month(s)' schedule, g.expires_on, current_date statement_date from cap.grant_status g join cap.companies c on c.id = g.company_id where g.id = $1" },
+      { "title": "Where it stands today", "layout": "record", "sql": "select vested, exercised, exercisable, unvested, outstanding, case when left_company then window_ends_on end exercise_by from cap.grant_status where id = $1" },
+      { "title": "Vesting dates", "sql": "select vests_on, quantity, case when cliff then 'cliff' else '' end note, case when vests_on <= current_date then 'vested' else '' end status from cap.vest_events where grant_id = $1 order by vests_on" }
     ]
   }
 ]

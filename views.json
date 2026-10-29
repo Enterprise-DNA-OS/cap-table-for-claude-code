@@ -2,13 +2,22 @@
   {
     "name": "week",
     "title": "This week",
-    "subtitle": "Cap Table for Claude Code: what needs attention, rendered by npm run view",
+    "subtitle": "Filings, cliffs, leavers and rule checks across every company, rendered by npm run view",
     "sections": [
-      {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
-      }
+      { "title": "Filings overdue or due soon", "sql": "select company, kind filing, subject_ref subject, due_on, state, days_left, detail from cap.obligations where state in ('OVERDUE','due soon') order by due_on" },
+      { "title": "Vesting in the next 30 days", "note": "Cliffs vest a year's worth at once.", "sql": "select company, vests_on, holder, grant_code, quantity, case when cliff then 'CLIFF' else '' end cliff from cap.vest_events where vests_on between current_date and current_date + 30 order by vests_on" },
+      { "title": "Leavers with options to exercise", "sql": "select company, holder, grant_code, exercisable, window_ends_on, days_left from cap.leavers where not expired and exercisable > 0 order by days_left" },
+      { "title": "Rule checks", "sql": "select company, severity, rule, subject, detail from cap.compliance_findings order by severity, company" }
+    ]
+  },
+  {
+    "name": "cap-tables",
+    "title": "Cap tables",
+    "subtitle": "Fully diluted, every company",
+    "sections": [
+      { "title": "Holders", "sql": "select company, name, kind, ordinary, preference, options, fully_diluted, issued_pct, fd_pct from cap.cap_table order by company, kind = 'pool', fully_diluted desc" },
+      { "title": "Option pools", "sql": "select company, plan, pool_size, granted, exercised, outstanding, returned, available from cap.pool order by company" },
+      { "title": "SAFEs and notes", "sql": "select company, code, holder, kind, currency, principal_cents, owed_cents, valuation_cap_cents, discount_pct, maturity_on, status from cap.convertible_status order by company, status" }
     ]
   }
 ]

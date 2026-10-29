@@ -21,7 +21,7 @@ export function table(rows, columns = null) {
   if (!rows || !rows.length) return '<p class="empty">Nothing here.</p>';
   const cols = columns || Object.keys(rows[0]);
   const head = cols.map((c) => `<th>${esc(c.replace(/_cents$/, '').replace(/_bps$/, ' %').replace(/_/g, ' '))}</th>`).join('');
-  const body = rows.map((r) => `<tr>${cols.map((c) => `<td${(r[c] instanceof Date || /^\d{4}-\d{2}-\d{2}(?:$|[T ])/.test(String(r[c]))) || ['code', 'style', 'style_no', 'sample', 'kind', 'pom'].includes(c) || c.endsWith('_code') || ['status', 'decision'].includes(c) ? ' class="date-cell"' : ''}>${esc(fmt(r[c], c, r))}</td>`).join('')}</tr>`).join('');
+  const body = rows.map((r) => `<tr>${cols.map((c) => `<td${(r[c] instanceof Date || /^\d{4}-\d{2}-\d{2}(?:$|[T ])/.test(String(r[c]))) || ['code', 'style', 'style_no', 'sample', 'kind', 'pom'].includes(c) || c.endsWith('_code') || ['status', 'decision', 'state', 'severity'].includes(c) ? ' class="date-cell"' : ''}>${esc(fmt(r[c], c, r))}</td>`).join('')}</tr>`).join('');
   return `<div class="table-scroll"><table${cols.length >= 4 ? ' class="wide"' : ''}><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 

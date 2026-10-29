@@ -1,0 +1,15 @@
+exit: 3000000
+per ordinary share: 0.1389
+preference: SA: takes 1800000 preference
+options in the money: 0
+note: 2 SAFE or note outstanding and not converted in this run
+
+rows
+  holder                                 takes home  pct of exit
+  -------------------------------------  ----------  -----------
+  Tasman Ventures Fund II LP                1500000        50.00
+  Aroha Ngata                                555556        18.52
+  Ben Walsh                                  527778        17.59
+  Southern Cross Angels Nominee Limited      383333        12.78
+  Rangi Moana Family Trust                    27778         0.93
+  Priya Shah                                   5556         0.19

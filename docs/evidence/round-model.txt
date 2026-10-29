@@ -1,0 +1,27 @@
+price per share: 1.3149
+pre money: 16000000
+raise: 4000000
+post money: 19999999
+pool top up: 828487
+new shares: 3041975
+conversions: 239415
+
+rows
+  holder                                             before  before pct     after  after pct
+  -----------------------------------------------  --------  ----------  --------  ---------
+  Aroha Ngata                                       4000000       36.04   4000000      26.30
+  Ben Walsh                                         3800000       34.23   3800000      24.98
+  Tasman Ventures Fund II LP                        1250000       11.26   1250000       8.22
+  Southern Cross Angels Nominee Limited              850000        7.66    850000       5.59
+  Rangi Moana Family Trust                           200000        1.80    200000       1.31
+  Priya Shah                                         120000        1.08    120000       0.79
+  Mere Tipene                                         60000        0.54     60000       0.39
+  Sam Ortiz                                           50000        0.45     50000       0.33
+  Liam O'Connor                                       29166        0.26     29166       0.19
+  Josh Kim                                            28333        0.26     28333       0.19
+  Dr Ruth Hale                                        20000        0.18     20000       0.13
+  Unallocated pool (ESOP)                            692501        6.24   1520988      10.00
+  Hannah Reid (SAFE-1 converts)                           0        0.00    142592       0.94
+  Kauri Growth Partners Limited (NOTE-1 converts)         0        0.00     96823       0.64
+  New investors                                           0        0.00   3041975      20.00
+  Total                                            11100000      100.00  15209877     100.00
